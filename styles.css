@@ -381,34 +381,68 @@ em {
 
 .hero {
   position: relative;
-  padding: 80px 28px 120px;
+  padding: 100px 28px 80px;
   overflow: hidden;
   min-height: calc(100vh - 64px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 1;
 }
 
-.hero-inner {
-  max-width: 1120px;
+.hero-grid {
+  max-width: 1400px;
   width: 100%;
-  display: flex;
-  flex-direction: column;
+  margin: 0 auto;
+  padding: 0 100px;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 48px;
   align-items: center;
-  text-align: center;
-  gap: 28px;
   position: relative;
   z-index: 2;
 }
 
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.hero-features {
+  display: flex;
+  gap: 32px;
+  margin-top: 16px;
+}
+
+.feature-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.feature-pill svg {
+  flex-shrink: 0;
+}
+
+.feature-pill-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-pill-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.feature-pill-desc {
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
 .headline {
-  font-size: clamp(56px, 10vw, 148px);
-  line-height: 0.95;
-  letter-spacing: -0.03em;
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   font-weight: 700;
-  max-width: 14ch;
-  margin: 4px 0 6px;
 }
 
 .headline .line {
@@ -436,7 +470,6 @@ em {
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
-  justify-content: center;
   margin-top: 8px;
 }
 
@@ -806,17 +839,17 @@ em {
 
 /* Filmstrip sidebars */
 .filmstrip {
-  position: absolute;
-  top: 0;
-  bottom: 0;
+  position: fixed;
+  top: 80px;
+  bottom: 40px;
   width: 80px;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   pointer-events: none;
   color: var(--text-faint);
-  padding: 0 14px;
-  z-index: 1;
+  padding: 40px 14px;
+  z-index: 10;
 }
 
 .filmstrip.left { left: 0; align-items: flex-start; }
@@ -1397,6 +1430,111 @@ em {
   transform: translateY(0);
 }
 
+/* ------- Hero Image (App Screenshot) ------- */
+
+.hero-image {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.hero-image-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: 90%;
+  background: radial-gradient(circle at center, rgba(1, 253, 72, 0.12) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-screenshot {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 800px;
+  border-radius: var(--radius-lg);
+
+  /* Premium 3D perspective - tilted like floating */
+  transform: perspective(1200px) rotateY(-8deg) rotateX(3deg);
+  transform-origin: right center;
+
+  /* Depth & shadow */
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(1, 253, 72, 0.06),
+    0 0 0 1px var(--border);
+
+  /* Smooth transition for hover */
+  transition: transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 400ms ease;
+}
+
+.hero-screenshot:hover {
+  transform: perspective(1200px) rotateY(-5deg) rotateX(2deg) scale(1.02);
+  box-shadow:
+    0 50px 120px rgba(0, 0, 0, 0.4),
+    0 0 80px rgba(1, 253, 72, 0.1),
+    0 0 0 1px var(--green);
+}
+
+/* Hero Grid Responsive */
+@media (max-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    text-align: center;
+    padding: 0 28px;
+  }
+
+  .hero-content {
+    align-items: center;
+  }
+
+  .hero-features {
+    justify-content: center;
+  }
+
+  .cta-row {
+    justify-content: center;
+  }
+
+  .hero-image {
+    order: -1;
+    justify-content: center;
+  }
+
+  .hero-screenshot {
+    transform: perspective(1200px) rotateY(-4deg) rotateX(2deg);
+    transform-origin: center center;
+    max-width: 700px;
+  }
+
+  .hero-screenshot:hover {
+    transform: perspective(1200px) rotateY(-2deg) rotateX(1deg) scale(1.02);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-features {
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .hero-screenshot {
+    transform: none;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  .hero-screenshot:hover {
+    transform: scale(1.01);
+  }
+}
+
 /* ------- Hero Badge (Screen recording, reimagined) ------- */
 
 .hero-badge {
@@ -1410,7 +1548,7 @@ em {
   font-size: 13px;
   font-weight: 500;
   color: var(--green);
-  margin-bottom: 12px;
+  width: fit-content;
   animation: fadeInUp 0.6s ease backwards;
 }
 
