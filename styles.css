@@ -501,44 +501,208 @@ em {
   overflow: hidden;
 }
 
-.demo-grid {
-  position: absolute;
-  inset: 42px;
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 16px;
-}
+/* ---- Recorder-app mock inside the hero window ----
+   Mirrors the real DaddyRecorder recorder pane so the product
+   is visible at a glance. */
 
-.demo-card {
-  background: linear-gradient(180deg, #1c1d22, #17181c);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 18px;
+.app-ui {
+  position: absolute;
+  inset: 32px 48px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  transition: box-shadow 260ms ease, transform 260ms ease,
-              border-color 260ms ease;
+  gap: 18px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-titles h3 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.app-titles p {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.app-sources {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+}
+
+.src-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: border-color 260ms ease, box-shadow 260ms ease,
+              transform 260ms ease;
+  position: relative;
+}
+
+.src-row.on {
+  border-color: var(--green);
+  box-shadow: 0 0 0 1px rgba(1, 253, 72, 0.15);
+}
+
+.src-row.hit {
+  transform: translateY(-1px);
+}
+
+.src-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elevated);
+  color: var(--text-dim);
+  border-radius: 9px;
+  flex-shrink: 0;
+  transition: color 240ms ease, background 240ms ease;
+}
+
+.src-row.on .src-icon {
+  color: var(--green);
+  background: rgba(1, 253, 72, 0.12);
+}
+
+.src-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.src-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.src-status {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 1px;
+}
+
+.src-row.on .src-status {
+  color: var(--green);
+}
+
+/* iOS-style toggle */
+.src-toggle {
+  width: 36px;
+  height: 20px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-bright);
+  border-radius: 999px;
+  position: relative;
+  transition: background 240ms ease, border-color 240ms ease;
+  flex-shrink: 0;
+}
+
+.src-toggle .knob {
+  position: absolute;
+  left: 2px;
+  top: 1px;
+  width: 14px;
+  height: 14px;
+  background: var(--text-faint);
+  border-radius: 50%;
+  transition: transform 260ms cubic-bezier(0.3, 0.8, 0.4, 1),
+              background 240ms ease;
+}
+
+.src-toggle.on {
+  background: rgba(1, 253, 72, 0.2);
+  border-color: var(--green);
+}
+
+.src-toggle.on .knob {
+  transform: translateX(16px);
+  background: var(--green);
+}
+
+/* Gradient Start button — matches the real app's CTA */
+.app-start {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #17FEA0, #01FD48);
+  color: #051a0c;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: default;
+  box-shadow: 0 10px 26px rgba(1, 253, 72, 0.28);
+  transition: transform 200ms ease, box-shadow 200ms ease,
+              background 240ms ease, color 240ms ease;
   position: relative;
   overflow: hidden;
 }
 
-.demo-card.hit {
-  border-color: var(--green);
-  box-shadow: 0 0 0 3px var(--green-soft);
-  transform: translateY(-2px);
+.app-start-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #051a0c;
+  transition: background 240ms ease;
 }
 
-.demo-card-kicker {
-  color: var(--text-faint);
+.app-start-kbd {
+  padding: 2px 7px;
+  background: rgba(5, 26, 12, 0.18);
+  border-radius: 5px;
+  font-size: 11px;
+  color: rgba(5, 26, 12, 0.85);
 }
 
-.demo-card-title {
-  font-size: 14px;
-  color: var(--text);
-  font-weight: 600;
-  letter-spacing: -0.01em;
+.app-start.recording {
+  background: #1a1b1f;
+  color: var(--red);
+  box-shadow: 0 0 0 1px var(--red) inset;
+}
+
+.app-start.recording .app-start-dot {
+  background: var(--red);
+  animation: pulseRec 1.2s infinite ease-in-out;
+}
+
+.app-start.recording .app-start-kbd {
+  background: rgba(255, 77, 77, 0.18);
+  color: rgba(255, 77, 77, 0.85);
+}
+
+.app-start.pulse {
+  animation: startBounce 520ms cubic-bezier(0.2, 0.8, 0.3, 1.2);
+}
+
+@keyframes startBounce {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
 }
 
 .demo-overlay {

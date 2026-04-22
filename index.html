@@ -81,24 +81,88 @@
             <span class="window-timer mono" id="windowTimer">00:07</span>
           </div>
           <div class="window-body" id="demoBody">
-            <div class="demo-grid">
-              <div class="demo-card" data-target>
-                <span class="demo-card-kicker mono">01</span>
-                <span class="demo-card-title">Kickoff slide</span>
+            <!-- Stylized DaddyRecorder recorder UI. Matches the real app:
+                 title, three source rows with iOS toggles, gradient Start
+                 button. The ghost cursor flips toggles + clicks Start in
+                 an endless loop to show the product in use. -->
+            <div class="app-ui">
+              <div class="app-header">
+                <div class="app-logo" aria-hidden="true">
+                  <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
+                    <defs>
+                      <linearGradient id="appLogoG1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#17FEA0"/>
+                        <stop offset="100%" stop-color="#01FD48"/>
+                      </linearGradient>
+                      <linearGradient id="appLogoG2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#0AA868"/>
+                        <stop offset="100%" stop-color="#027A26"/>
+                      </linearGradient>
+                    </defs>
+                    <path d="M 88 50 L 82 56 L 36 82 L 36 74 Z" fill="url(#appLogoG2)"/>
+                    <path d="M 30 18 L 82 50 L 30 70 Z" fill="url(#appLogoG1)"/>
+                  </svg>
+                </div>
+                <div class="app-titles">
+                  <h3>Ready to record</h3>
+                  <p>Pick your sources. Hit start.</p>
+                </div>
               </div>
-              <div class="demo-card" data-target>
-                <span class="demo-card-kicker mono">02</span>
-                <span class="demo-card-title">Live editor walkthrough</span>
+
+              <div class="app-sources">
+                <div class="src-row" data-initial="on" data-toggle="screen">
+                  <div class="src-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="2" y="3" width="20" height="14" rx="2"/>
+                      <line x1="8" y1="21" x2="16" y2="21"/>
+                      <line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                  </div>
+                  <div class="src-body">
+                    <div class="src-title">Screen</div>
+                    <div class="src-status">Picker opens on Start</div>
+                  </div>
+                  <div class="src-toggle on"><span class="knob"></span></div>
+                </div>
+
+                <div class="src-row" data-initial="off" data-toggle="mic">
+                  <div class="src-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                      <line x1="12" y1="19" x2="12" y2="23"/>
+                      <line x1="8" y1="23" x2="16" y2="23"/>
+                    </svg>
+                  </div>
+                  <div class="src-body">
+                    <div class="src-title">Microphone</div>
+                    <div class="src-status">MacBook Pro Microphone</div>
+                  </div>
+                  <div class="src-toggle"><span class="knob"></span></div>
+                </div>
+
+                <div class="src-row" data-initial="off" data-toggle="camera">
+                  <div class="src-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M23 7l-7 5 7 5V7z"/>
+                      <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                    </svg>
+                  </div>
+                  <div class="src-body">
+                    <div class="src-title">Camera</div>
+                    <div class="src-status">FaceTime HD Camera</div>
+                  </div>
+                  <div class="src-toggle"><span class="knob"></span></div>
+                </div>
               </div>
-              <div class="demo-card" data-target>
-                <span class="demo-card-kicker mono">03</span>
-                <span class="demo-card-title">Pricing</span>
-              </div>
-              <div class="demo-card" data-target>
-                <span class="demo-card-kicker mono">04</span>
-                <span class="demo-card-title">Q&amp;A</span>
-              </div>
+
+              <button class="app-start" id="demoStart" type="button" aria-hidden="true" tabindex="-1">
+                <span class="app-start-dot" aria-hidden="true"></span>
+                <span class="app-start-label">Start recording</span>
+                <span class="app-start-kbd mono">⌘⇧R</span>
+              </button>
             </div>
+
             <div class="demo-overlay" id="demoCursor">
               <div class="ghost-cursor">
                 <svg width="22" height="22" viewBox="0 0 20 20" fill="#0a0a0b">
@@ -106,8 +170,6 @@
                 </svg>
               </div>
               <div class="ripple" id="demoRipple"></div>
-              <div class="zoom-reticle" id="demoReticle"></div>
-              <div class="webcam-bubble" id="demoBubble"></div>
             </div>
           </div>
         </div>

@@ -65,79 +65,113 @@
   }
 
   // ---------- Interactive hero demo ----------
-  // A ghost cursor walks between the four cards in the window, pauses,
-  // "clicks" (ripple + card highlight + zoom reticle), and moves on.
+  // A ghost cursor walks through the recorder UI the way a real user
+  // would: flips each source toggle on in sequence, then clicks the
+  // big gradient Start button. The window then "starts recording"
+  // (red state + running timer) for a beat, resets, and loops.
 
   const demo = document.getElementById("demo");
   const demoBody = document.getElementById("demoBody");
   const ghostCursor = demo?.querySelector(".ghost-cursor");
   const ripple = document.getElementById("demoRipple");
-  const reticle = document.getElementById("demoReticle");
-  const cards = demoBody?.querySelectorAll("[data-target]") || [];
+  const srcRows = demoBody?.querySelectorAll(".src-row") || [];
+  const startBtn = document.getElementById("demoStart");
 
-  if (demo && cards.length > 0 && ghostCursor && ripple && reticle) {
-    const advance = async () => {
-      // Cycle through the cards in a varied order so it feels alive.
-      const order = [0, 2, 1, 3];
-      let i = 0;
+  // Each tick the ghost cursor moves to an element, pauses (simulating
+  // aim), then fires a "click" (ripple) and runs a per-target callback.
+  const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
-      // Always-running loop. Uses getBoundingClientRect relative to the
-      // demo body so it adapts to size changes.
-      const tick = async () => {
-        const body = demoBody.getBoundingClientRect();
-        const card = cards[order[i % order.length]];
-        const rect = card.getBoundingClientRect();
+  if (demo && srcRows.length > 0 && ghostCursor && ripple && startBtn) {
+    // Apply initial toggle states from data-initial on each row.
+    const resetState = () => {
+      srcRows.forEach((row) => {
+        const initial = row.dataset.initial === "on";
+        row.classList.toggle("on", initial);
+        row.querySelector(".src-toggle")?.classList.toggle("on", initial);
+      });
+      startBtn.classList.remove("recording", "pulse");
+      startBtn.querySelector(".app-start-label").textContent = "Start recording";
+    };
+    resetState();
 
-        // Target point: centerish of the card, with small random offset.
-        const jitterX = (Math.random() - 0.5) * 30;
-        const jitterY = (Math.random() - 0.5) * 20;
-        const tx = rect.left - body.left + rect.width / 2 + jitterX;
-        const ty = rect.top - body.top + rect.height / 2 + jitterY;
-
-        // Move the ghost cursor.
-        ghostCursor.style.left = `${tx - 11}px`;
-        ghostCursor.style.top = `${ty - 11}px`;
-
-        // After the move finishes (matches CSS transition duration),
-        // fire a click visual: ripple + card highlight + zoom reticle.
-        await delay(760);
-
-        ripple.style.left = `${tx}px`;
-        ripple.style.top = `${ty}px`;
-        ripple.classList.remove("active");
-        void ripple.offsetWidth; // restart animation
-        ripple.classList.add("active");
-
-        card.classList.add("hit");
-
-        reticle.style.left = `${tx}px`;
-        reticle.style.top = `${ty}px`;
-        reticle.classList.add("active");
-
-        await delay(1400);
-
-        card.classList.remove("hit");
-        reticle.classList.remove("active");
-
-        i++;
-        await delay(400);
-        tick();
-      };
-
-      // Start after the window-entrance animation has played.
-      await delay(1400);
-      tick();
+    const moveTo = async (el, offset = {}) => {
+      const body = demoBody.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
+      const tx = rect.left - body.left + rect.width / 2 + (offset.x || 0);
+      const ty = rect.top - body.top + rect.height / 2 + (offset.y || 0);
+      ghostCursor.style.left = `${tx - 11}px`;
+      ghostCursor.style.top = `${ty - 11}px`;
+      // Await the CSS transition on the cursor (700ms).
+      await delay(780);
+      return { tx, ty };
     };
 
-    const delay = (ms) => new Promise((r) => setTimeout(r, ms));
+    const fireRipple = (tx, ty) => {
+      ripple.style.left = `${tx}px`;
+      ripple.style.top = `${ty}px`;
+      ripple.classList.remove("active");
+      void ripple.offsetWidth;
+      ripple.classList.add("active");
+    };
 
-    // Only animate when the demo is actually visible — saves cycles
-    // when the user scrolls far past the hero.
+    const clickToggle = async (row) => {
+      // Aim at the toggle on the right side of the row.
+      const toggle = row.querySelector(".src-toggle");
+      const { tx, ty } = await moveTo(toggle);
+      fireRipple(tx, ty);
+      row.classList.add("hit");
+      await delay(60);
+      // Flip state.
+      const isOn = toggle.classList.contains("on");
+      toggle.classList.toggle("on", !isOn);
+      row.classList.toggle("on", !isOn);
+      await delay(420);
+      row.classList.remove("hit");
+    };
+
+    const clickStart = async () => {
+      const { tx, ty } = await moveTo(startBtn);
+      fireRipple(tx, ty);
+      startBtn.classList.add("pulse");
+      await delay(520);
+      startBtn.classList.remove("pulse");
+      startBtn.classList.add("recording");
+      startBtn.querySelector(".app-start-label").textContent = "● Recording";
+    };
+
+    const runCycle = async () => {
+      // Move cursor to a neutral starting spot (upper-left of body).
+      ghostCursor.style.left = "24px";
+      ghostCursor.style.top = "24px";
+      await delay(300);
+
+      // Flip any currently-off toggles on, in row order.
+      for (const row of srcRows) {
+        if (!row.classList.contains("on")) {
+          await clickToggle(row);
+          await delay(160);
+        }
+      }
+
+      // Walk down to Start and click it.
+      await delay(240);
+      await clickStart();
+
+      // Sit in the "recording" state briefly so the user can read it.
+      await delay(1800);
+
+      // Reset and loop.
+      resetState();
+      await delay(600);
+      runCycle();
+    };
+
+    // Only animate when the demo is actually on screen.
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            advance();
+            setTimeout(runCycle, 1400); // wait out the window entrance
             io.disconnect();
           }
         });
@@ -146,7 +180,7 @@
     );
     io.observe(demo);
 
-    // Window-local fake recording timer, mm:ss.
+    // Small running timer in the window chrome.
     if (windowTimer) {
       const started = performance.now();
       const update = () => {
