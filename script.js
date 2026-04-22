@@ -310,36 +310,58 @@
     setTimeout(tiltLoop, 1600);
   }
 
-  // ---------- Scroll parallax (overlap-safe) ----------
-  // Earlier revision also parallax'd the headline and the hero window,
-  // which pushed text into the subheading and the CTA row. That's a
-  // nope: content layers must not drift relative to each other.
+  // ---------- Scroll parallax ----------
+  // Layers move at different rates relative to scroll to create depth.
+  // Safety rule: only elements that (a) live outside the content column
+  // OR (b) lag scroll (move at < 1×) are animated. Nothing translates
+  // in a direction that could drive it into another piece of content.
   //
-  // New rule: only things that live OUTSIDE the main content column
-  // parallax — the left/right filmstrip timecodes. Everything inside
-  // the column scrolls at 1:1. The hero still feels alive via cursor
-  // trail + pointer tilt, which don't touch layout.
+  //   • Filmstrip timecodes drift DOWN at 0.35× — background plane.
+  //   • Hero window lags UP at ~0.3× — prominent sticky parallax; the
+  //     window appears to hang on screen as the headline scrolls past.
+  //     Clipped by .hero's overflow:hidden so it can't bleed into the
+  //     features section.
+  //   • Window also gains a tiny scale-down + extra rotateX as it
+  //     leaves so it reads as "receding" instead of just drifting.
   if (!prefersReducedMotion) {
-    const parallaxEls = [
+    const filmEls = [
       ...document.querySelectorAll(".filmstrip span"),
     ].map((el) => ({ el, speed: 0.35 }));
+    const demoEl = document.querySelector(".demo");
+    const heroEl = document.querySelector(".hero");
+    const windowInner = document.querySelector(".demo .window");
 
-    if (parallaxEls.length) {
-      let lastScrollY = -1;
-      const onScroll = () => {
-        const y = window.scrollY;
-        if (y === lastScrollY) {
-          requestAnimationFrame(onScroll);
-          return;
-        }
-        lastScrollY = y;
-        parallaxEls.forEach(({ el, speed }) => {
-          el.style.transform = `translateY(${y * speed}px)`;
-        });
+    let lastScrollY = -1;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y === lastScrollY) {
         requestAnimationFrame(onScroll);
-      };
-      onScroll();
-    }
+        return;
+      }
+      lastScrollY = y;
+
+      // Filmstrips drift slowly downward as scroll proceeds.
+      filmEls.forEach(({ el, speed }) => {
+        el.style.transform = `translateY(${y * speed}px)`;
+      });
+
+      // Hero window sticky-parallax. translateY is POSITIVE (the window
+      // visually lags scroll), so it hangs on screen as the text above
+      // scrolls past. A small scale-down based on hero-section progress
+      // reads as the window receding rather than just drifting. The
+      // inner .window element still owns rotateX/Y via pointer-tilt, so
+      // those transforms compose cleanly on the child.
+      if (demoEl && heroEl) {
+        const rect = heroEl.getBoundingClientRect();
+        const progress = Math.max(0, Math.min(1, -rect.top / rect.height));
+        const stick = y * 0.3;
+        const scale = 1 - progress * 0.12;
+        demoEl.style.transform = `translateY(${stick}px) scale(${scale})`;
+      }
+
+      requestAnimationFrame(onScroll);
+    };
+    onScroll();
   }
 
   // ---------- Reveal-on-scroll for feature takes ----------
