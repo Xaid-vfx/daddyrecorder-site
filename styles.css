@@ -359,6 +359,15 @@ em {
 
 .eyebrow-white { color: var(--text); }
 
+.eyebrow-sep {
+  opacity: 0.5;
+  margin: 0 2px;
+}
+
+#downloadCount {
+  color: var(--green);
+}
+
 .green-dot {
   display: inline-block;
   width: 6px;
@@ -378,6 +387,7 @@ em {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
 }
 
 .hero-inner {
@@ -856,9 +866,14 @@ em {
 
 /* ============== REEL — "takes" ============== */
 
+/* Reel sits on top of the pinned hero on scroll — higher z-index and
+   a solid background so it visually covers the hero as the page
+   scrolls past the pinner's extra height. */
 .reel {
   padding: 100px 0;
   position: relative;
+  z-index: 2;
+  background: var(--bg);
   border-top: 1px solid var(--border);
 }
 
@@ -1313,19 +1328,56 @@ em {
 
 /* ============== RESPONSIVE POLISH ============== */
 
-@media (max-width: 640px) {
+@media (max-width: 900px) {
   .hud {
-    grid-template-columns: auto auto;
-    gap: 12px;
+    padding: 14px 18px;
   }
   .hud-center { display: none; }
-  .hero { padding-top: 40px; }
-  .demo { margin-top: 32px; }
+  .hero { padding: 48px 20px 80px; }
+  .headline { font-size: clamp(44px, 11vw, 92px); }
+  .hero-sub { font-size: 15px; }
+  .cta-row { flex-direction: column; width: 100%; gap: 10px; }
+  .cta-row .btn { width: 100%; justify-content: center; }
+  .btn-xl { padding: 14px 18px; }
+  .btn-sub { padding-left: 10px; font-size: 11px; }
+  .demo { margin-top: 28px; }
+  .window-body { aspect-ratio: 3 / 4; } /* taller on mobile for readability */
+  .app-ui { inset: 18px 20px; gap: 12px; }
+  .app-titles h3 { font-size: 16px; }
+  .app-titles p { font-size: 11px; }
+  .src-row { padding: 10px 12px; gap: 10px; }
+  .src-icon { width: 28px; height: 28px; }
+  .src-title { font-size: 12px; }
+  .src-status { font-size: 10px; }
+  .app-start { padding: 10px 14px; font-size: 13px; }
   .foot {
     flex-direction: column;
     gap: 10px;
     text-align: center;
+    padding: 20px 18px 32px;
   }
+  .section-head { margin-bottom: 36px; padding: 0 20px; }
+  .reel, .steps, .shortcuts { padding-left: 20px; padding-right: 20px; padding-top: 64px; padding-bottom: 64px; }
+  .takes { padding: 0; gap: 12px; }
+  .take { padding: 20px; }
+  .take h3 { font-size: 18px; }
+  .download { padding: 80px 20px 100px; }
+  .download-title { font-size: clamp(36px, 10vw, 56px); }
+  .btn-xxl { padding: 18px 22px; font-size: 15px; flex-wrap: wrap; justify-content: center; }
+}
+
+@media (max-width: 640px) {
+  .hud {
+    grid-template-columns: auto 1fr auto;
+    gap: 10px;
+  }
+  .hud-timer { display: none; }
+  .headline { line-height: 1.0; }
+  .eyebrow { font-size: 10px; padding: 5px 10px; }
+  .step-list li { padding: 24px 0; }
+  .shortcut-grid { grid-template-columns: 1fr; }
+  .shortcut { padding: 16px 18px; gap: 14px; }
+  .shortcut .keys { min-width: auto; }
 }
 
 /* ------- Reveal-on-scroll ------- */

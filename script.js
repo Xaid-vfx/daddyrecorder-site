@@ -210,6 +210,50 @@
     setInterval(step, 1000);
   }
 
+  // ---------- Analytics: live download count + conversion tracking ----------
+  // Pull the download count from GitHub's Releases API so the eyebrow
+  // shows "X downloads". No auth required for public repos. Updates
+  // once per page load; rate limit is 60/hr unauthenticated, plenty.
+  const downloadCountEl = document.getElementById("downloadCount");
+  if (downloadCountEl) {
+    fetch("https://api.github.com/repos/Xaid-vfx/daddyrecorder-site/releases/latest", {
+      headers: { Accept: "application/vnd.github+json" },
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((release) => {
+        if (!release) return;
+        const total = (release.assets || []).reduce(
+          (sum, a) => sum + (a.download_count || 0),
+          0
+        );
+        if (total > 0) {
+          downloadCountEl.textContent = `${total.toLocaleString()} download${total === 1 ? "" : "s"}`;
+        } else {
+          // Hide the "—" placeholder if the API says zero. Less sad than
+          // showing "0 downloads" on the very first day.
+          downloadCountEl.style.display = "none";
+          document.querySelector(".eyebrow-sep")?.remove();
+        }
+      })
+      .catch(() => {
+        downloadCountEl.style.display = "none";
+        document.querySelector(".eyebrow-sep")?.remove();
+      });
+  }
+
+  // Fire a custom "Download" event to Plausible whenever a user
+  // activates any download link. Non-blocking — if Plausible failed
+  // to load, this is a silent no-op.
+  document
+    .querySelectorAll('a[href*="DaddyRecorder.dmg"]')
+    .forEach((el) => {
+      el.addEventListener("click", () => {
+        if (typeof window.plausible === "function") {
+          window.plausible("Download");
+        }
+      });
+    });
+
   // ---------- Year stamp ----------
 
   const yr = document.getElementById("year");
@@ -345,18 +389,17 @@
         el.style.transform = `translateY(${y * speed}px)`;
       });
 
-      // Hero window sticky-parallax. translateY is POSITIVE (the window
-      // visually lags scroll), so it hangs on screen as the text above
-      // scrolls past. A small scale-down based on hero-section progress
-      // reads as the window receding rather than just drifting. The
-      // inner .window element still owns rotateX/Y via pointer-tilt, so
-      // those transforms compose cleanly on the child.
+      // Reel has z-index + solid background so as the user scrolls it
+      // naturally covers the hero. We add a subtle scale-down + fade on
+      // the hero's demo window tied to hero-section progress so the
+      // handoff reads as intentional rather than a hard cut.
       if (demoEl && heroEl) {
         const rect = heroEl.getBoundingClientRect();
         const progress = Math.max(0, Math.min(1, -rect.top / rect.height));
-        const stick = y * 0.3;
-        const scale = 1 - progress * 0.12;
-        demoEl.style.transform = `translateY(${stick}px) scale(${scale})`;
+        const scale = 1 - progress * 0.08;
+        const opacity = 1 - progress * 0.3;
+        demoEl.style.transform = `scale(${scale})`;
+        demoEl.style.opacity = String(opacity);
       }
 
       requestAnimationFrame(onScroll);
