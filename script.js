@@ -276,63 +276,36 @@
     setTimeout(tiltLoop, 1600);
   }
 
-  // ---------- Scroll parallax ----------
-  // Strata move at different rates relative to scroll:
-  //   • Filmstrip timecodes drift slowly (0.5×) — the background.
-  //   • Hero window lifts and tilts back (0.25×) — the foreground.
-  //   • Headline fades + drops a touch as you scroll past it.
+  // ---------- Scroll parallax (overlap-safe) ----------
+  // Earlier revision also parallax'd the headline and the hero window,
+  // which pushed text into the subheading and the CTA row. That's a
+  // nope: content layers must not drift relative to each other.
   //
-  // Each element opts in via data-parallax="<speed>".
+  // New rule: only things that live OUTSIDE the main content column
+  // parallax — the left/right filmstrip timecodes. Everything inside
+  // the column scrolls at 1:1. The hero still feels alive via cursor
+  // trail + pointer tilt, which don't touch layout.
   if (!prefersReducedMotion) {
     const parallaxEls = [
       ...document.querySelectorAll(".filmstrip span"),
     ].map((el) => ({ el, speed: 0.35 }));
 
-    parallaxEls.push(
-      ...[...document.querySelectorAll("[data-parallax]")].map((el) => ({
-        el,
-        speed: parseFloat(el.dataset.parallax) || 0.3,
-      }))
-    );
-
-    const headline = document.querySelector(".headline");
-    const windowEl = document.querySelector(".demo");
-    const heroSection = document.querySelector(".hero");
-
-    let lastScrollY = -1;
-    const onScroll = () => {
-      const y = window.scrollY;
-      if (y === lastScrollY) {
+    if (parallaxEls.length) {
+      let lastScrollY = -1;
+      const onScroll = () => {
+        const y = window.scrollY;
+        if (y === lastScrollY) {
+          requestAnimationFrame(onScroll);
+          return;
+        }
+        lastScrollY = y;
+        parallaxEls.forEach(({ el, speed }) => {
+          el.style.transform = `translateY(${y * speed}px)`;
+        });
         requestAnimationFrame(onScroll);
-        return;
-      }
-      lastScrollY = y;
-
-      parallaxEls.forEach(({ el, speed }) => {
-        el.style.transform = `translateY(${y * speed}px)`;
-      });
-
-      // Hero defocus — the page as a camera pulling away.
-      if (heroSection) {
-        const rect = heroSection.getBoundingClientRect();
-        const progress = Math.max(0, Math.min(1, -rect.top / rect.height));
-
-        if (headline) {
-          headline.style.transform = `translateY(${y * 0.12}px)`;
-          headline.style.opacity = String(1 - progress * 0.8);
-        }
-        if (windowEl) {
-          const lift = -y * 0.08;
-          const tilt = 4 + progress * 6;
-          windowEl.style.transform = `translateY(${lift}px)`;
-          // window inner `.window` already owns the rotateX via pointer
-          // tilt — we only shift the wrapper so the tilts compose cleanly.
-        }
-      }
-
-      requestAnimationFrame(onScroll);
-    };
-    onScroll();
+      };
+      onScroll();
+    }
   }
 
   // ---------- Reveal-on-scroll for feature takes ----------
