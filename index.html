@@ -94,160 +94,94 @@
 
   <!-- ==== HERO ==== -->
   <section class="hero">
-    <div class="hero-inner">
-      <div class="hero-badge">
-        <span class="badge-dot"></span>
-        <span>Screen recording, reimagined</span>
-      </div>
+    <div class="hero-grid">
+      <!-- Left Column: Content -->
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          <span>Screen recording, reimagined</span>
+        </div>
 
-      <div class="eyebrow mono">
-        <span class="green-dot"></span>
-        A native Mac app · 94 MB · Apple silicon
-        <span class="eyebrow-sep">·</span>
-        <span id="downloadCount">— downloads</span>
-      </div>
+        <h1 class="headline">
+          <span class="line" data-line="1">Your cursor</span>
+          <span class="line" data-line="2">is the <em>camera.</em></span>
+        </h1>
 
-      <h1 class="headline">
-        <span class="line" data-line="1">The screen recorder</span>
-        <span class="line" data-line="2">that <em>edits</em> itself.</span>
-      </h1>
+        <p class="hero-sub">
+          DaddyRecorder automatically zooms, cuts and enhances your screen recordings so you can focus on what matters.
+        </p>
 
-      <p class="hero-sub">
-        Record. Click anywhere. DaddyRecorder pulls the camera in,
-        smooths the cursor, zooms into what matters, and hands you a
-        clip your viewers will actually watch.
-      </p>
+        <div class="cta-row">
+          <a class="btn btn-primary btn-xl" href="https://github.com/Xaid-vfx/daddyrecorder-site/releases/latest/download/DaddyRecorder.dmg" download>
+            <span class="btn-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2"/>
+                <circle cx="8" cy="8" r="3" fill="currentColor"/>
+              </svg>
+            </span>
+            <span>Start Recording — It's Free</span>
+          </a>
+          <a class="btn btn-ghost btn-xl" href="#how">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M6.5 5.5L11 8L6.5 10.5V5.5Z" fill="currentColor"/>
+            </svg>
+            Watch Demo
+          </a>
+        </div>
 
-      <div class="cta-row">
-        <a class="btn btn-primary btn-xl" href="https://github.com/Xaid-vfx/daddyrecorder-site/releases/latest/download/DaddyRecorder.dmg" download>
-          <span class="btn-icon" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>
-          </span>
-          <span>Start recording</span>
-          <span class="btn-sub mono">DaddyRecorder.dmg</span>
-        </a>
-        <a class="btn btn-ghost btn-xl" href="#how">
-          See how it works
-          <span class="btn-arrow">→</span>
-        </a>
-      </div>
-
-      <!-- Interactive fake app window.
-           The ghost cursor moves across the window and "clicks" to
-           trigger auto-zoom — a live demo of the feature. -->
-      <div class="demo" id="demo" aria-label="Product demo">
-        <div class="window">
-          <div class="window-chrome">
-            <span class="dot red"></span>
-            <span class="dot yellow"></span>
-            <span class="dot green"></span>
-            <span class="window-title mono">DaddyRecorder — recording</span>
-            <span class="window-timer mono" id="windowTimer">00:07</span>
-          </div>
-          <div class="window-body" id="demoBody">
-            <!-- Stylized DaddyRecorder recorder UI. Matches the real app:
-                 title, three source rows with iOS toggles, gradient Start
-                 button. The ghost cursor flips toggles + clicks Start in
-                 an endless loop to show the product in use. -->
-            <div class="app-ui">
-              <div class="app-header">
-                <div class="app-logo" aria-hidden="true">
-                  <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
-                    <defs>
-                      <linearGradient id="appLogoG1" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#17FEA0"/>
-                        <stop offset="100%" stop-color="#01FD48"/>
-                      </linearGradient>
-                      <linearGradient id="appLogoG2" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#0AA868"/>
-                        <stop offset="100%" stop-color="#027A26"/>
-                      </linearGradient>
-                    </defs>
-                    <path d="M 88 50 L 82 56 L 36 82 L 36 74 Z" fill="url(#appLogoG2)"/>
-                    <path d="M 30 18 L 82 50 L 30 70 Z" fill="url(#appLogoG1)"/>
-                  </svg>
-                </div>
-                <div class="app-titles">
-                  <h3>Ready to record</h3>
-                  <p>Pick your sources. Hit start.</p>
-                </div>
-              </div>
-
-              <div class="app-sources">
-                <div class="src-row" data-initial="on" data-toggle="screen">
-                  <div class="src-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="2" y="3" width="20" height="14" rx="2"/>
-                      <line x1="8" y1="21" x2="16" y2="21"/>
-                      <line x1="12" y1="17" x2="12" y2="21"/>
-                    </svg>
-                  </div>
-                  <div class="src-body">
-                    <div class="src-title">Screen</div>
-                    <div class="src-status">Picker opens on Start</div>
-                  </div>
-                  <div class="src-toggle on"><span class="knob"></span></div>
-                </div>
-
-                <div class="src-row" data-initial="off" data-toggle="mic">
-                  <div class="src-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-                      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                      <line x1="12" y1="19" x2="12" y2="23"/>
-                      <line x1="8" y1="23" x2="16" y2="23"/>
-                    </svg>
-                  </div>
-                  <div class="src-body">
-                    <div class="src-title">Microphone</div>
-                    <div class="src-status">MacBook Pro Microphone</div>
-                  </div>
-                  <div class="src-toggle"><span class="knob"></span></div>
-                </div>
-
-                <div class="src-row" data-initial="off" data-toggle="camera">
-                  <div class="src-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M23 7l-7 5 7 5V7z"/>
-                      <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-                    </svg>
-                  </div>
-                  <div class="src-body">
-                    <div class="src-title">Camera</div>
-                    <div class="src-status">FaceTime HD Camera</div>
-                  </div>
-                  <div class="src-toggle"><span class="knob"></span></div>
-                </div>
-              </div>
-
-              <button class="app-start" id="demoStart" type="button" aria-hidden="true" tabindex="-1">
-                <span class="app-start-dot" aria-hidden="true"></span>
-                <span class="app-start-label">Start recording</span>
-                <span class="app-start-kbd mono">⌘⇧R</span>
-              </button>
+        <div class="hero-features">
+          <div class="feature-pill">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="6" stroke="var(--green)" stroke-width="1.5"/>
+              <circle cx="8" cy="8" r="2" fill="var(--green)"/>
+            </svg>
+            <div class="feature-pill-text">
+              <span class="feature-pill-title">Auto-zoom</span>
+              <span class="feature-pill-desc">Follows attention</span>
             </div>
+          </div>
 
-            <div class="demo-overlay" id="demoCursor">
-              <div class="ghost-cursor">
-                <svg width="22" height="22" viewBox="0 0 20 20" fill="#0a0a0b">
-                  <path d="M1 1 L1 15 L5 11 L8 17 L10 16 L7 10 L13 10 Z" fill="#fff" stroke="#0a0a0b" stroke-width="1"/>
-                </svg>
-              </div>
-              <div class="ripple" id="demoRipple"></div>
+          <div class="feature-pill">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="6" stroke="var(--green)" stroke-width="1.5"/>
+              <path d="M5 8L7 10L11 6" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="feature-pill-text">
+              <span class="feature-pill-title">Smart Edits</span>
+              <span class="feature-pill-desc">Cuts the noise</span>
+            </div>
+          </div>
+
+          <div class="feature-pill">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="6" stroke="var(--green)" stroke-width="1.5"/>
+              <path d="M8 5V8L10 10" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <div class="feature-pill-text">
+              <span class="feature-pill-title">Instant Export</span>
+              <span class="feature-pill-desc">Share in seconds</span>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Right Column: Screenshot -->
+      <div class="hero-image">
+        <div class="hero-image-glow"></div>
+        <img src="assets/hero-app.png" alt="DaddyRecorder Editor Interface" class="hero-screenshot">
+      </div>
     </div>
 
-    <!-- Side marks — pretend film strip -->
-    <aside class="filmstrip left" aria-hidden="true">
-      <span class="mono">00:00</span><span class="mono">00:04</span><span class="mono">00:08</span><span class="mono">00:12</span><span class="mono">00:16</span><span class="mono">00:20</span>
-    </aside>
-    <aside class="filmstrip right" aria-hidden="true">
-      <span class="mono">TAKE 01</span><span class="mono">TAKE 02</span><span class="mono">TAKE 03</span>
-    </aside>
   </section>
+
+  <!-- Side marks — pretend film strip (fixed, spans entire page) -->
+  <aside class="filmstrip left" aria-hidden="true">
+    <span class="mono">00:00</span><span class="mono">00:04</span><span class="mono">00:08</span><span class="mono">00:12</span><span class="mono">00:16</span><span class="mono">00:20</span>
+  </aside>
+  <aside class="filmstrip right" aria-hidden="true">
+    <span class="mono">TAKE 01</span><span class="mono">TAKE 02</span><span class="mono">TAKE 03</span>
+  </aside>
 
   <!-- ==== WHAT IT DOES — kinetic feature reel ==== -->
   <section class="reel" id="what">
