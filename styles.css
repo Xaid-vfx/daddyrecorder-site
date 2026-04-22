@@ -87,6 +87,30 @@ em {
   font-style: italic;
   color: var(--green-light);
   font-weight: 500;
+  position: relative;
+  display: inline-block;
+}
+
+/* Zoom-reticle pulse that fires on the word "edits" whenever the hero
+   demo fires a click — visually ties the product's behaviour to the
+   marketing line. Pure CSS once JS adds the class. */
+.headline em.zoom-pulse::after {
+  content: "";
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  top: -10%;
+  bottom: -10%;
+  border: 1.5px solid var(--green);
+  border-radius: 10px;
+  pointer-events: none;
+  animation: zoomPulse 900ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes zoomPulse {
+  0%   { opacity: 0;    transform: scale(0.85); }
+  20%  { opacity: 0.9;  transform: scale(1); }
+  100% { opacity: 0;    transform: scale(1.05); }
 }
 
 /* ------- Custom cursor ------- */
@@ -127,6 +151,25 @@ em {
   width: 56px;
   height: 56px;
   border-color: var(--green-light);
+}
+
+/* ------- Cursor trail particles ------- */
+
+/* A short decaying tail of neon dots follows the pointer. Count +
+   timing are driven from JS so per-dot properties stay in one place. */
+.cursor-trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--green-light), rgba(1, 253, 72, 0.1) 70%);
+  pointer-events: none;
+  z-index: 9997;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  mix-blend-mode: screen;
 }
 
 /* ------- Film grain ------- */
@@ -1119,4 +1162,34 @@ em {
     gap: 10px;
     text-align: center;
   }
+}
+
+/* ------- Reveal-on-scroll ------- */
+/* JS opts elements in by adding .reveal on load, then .is-visible when
+   they cross the viewport threshold. Fallback if no JS / reduced
+   motion: elements render statically. */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 700ms cubic-bezier(0.2, 0.7, 0.2, 1) var(--reveal-delay, 0ms),
+    transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ------- Reduced motion — opt out of every ambient loop. ------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+  .grain { display: none; }
 }
