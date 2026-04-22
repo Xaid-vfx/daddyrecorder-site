@@ -1,0 +1,3 @@
+# Built DMG is distributed via GitHub Releases, not tracked in the repo.
+assets/*.dmg
+.DS_Store

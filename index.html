@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DaddyRecorder — The screen recorder that edits itself</title>
+  <meta name="description" content="A native Mac screen recorder that records, zooms, and polishes your clips automatically. Built for creators, devs, and demo makers." />
+  <meta property="og:title" content="DaddyRecorder" />
+  <meta property="og:description" content="The screen recorder that edits itself." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Custom cursor + trail -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Subtle grain layer for texture -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Top bar that pretends to be a recorder HUD -->
+  <header class="hud">
+    <div class="hud-left">
+      <span class="rec-dot" aria-hidden="true"></span>
+      <span class="mono hud-label">REC</span>
+      <span class="mono hud-timer" id="hudTimer">00:00:00</span>
+    </div>
+    <nav class="hud-center">
+      <a href="#what">What it does</a>
+      <a href="#how">How it works</a>
+      <a href="#shortcuts">Shortcuts</a>
+    </nav>
+    <div class="hud-right">
+      <a class="btn btn-ghost" href="#download">Download</a>
+    </div>
+  </header>
+
+  <!-- ==== HERO ==== -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow mono">
+        <span class="green-dot"></span>
+        A native Mac app · 94 MB · Apple silicon
+      </div>
+
+      <h1 class="headline">
+        <span class="line" data-line="1">The screen recorder</span>
+        <span class="line" data-line="2">that <em>edits</em> itself.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Record. Click anywhere. DaddyRecorder pulls the camera in,
+        smooths the cursor, zooms into what matters, and hands you a
+        clip your viewers will actually watch.
+      </p>
+
+      <div class="cta-row">
+        <a class="btn btn-primary btn-xl" href="https://github.com/Xaid-vfx/daddyrecorder-site/releases/latest/download/DaddyRecorder.dmg" download>
+          <span class="btn-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>
+          </span>
+          <span>Start recording</span>
+          <span class="btn-sub mono">DaddyRecorder.dmg</span>
+        </a>
+        <a class="btn btn-ghost btn-xl" href="#how">
+          See how it works
+          <span class="btn-arrow">→</span>
+        </a>
+      </div>
+
+      <!-- Interactive fake app window.
+           The ghost cursor moves across the window and "clicks" to
+           trigger auto-zoom — a live demo of the feature. -->
+      <div class="demo" id="demo" aria-label="Product demo">
+        <div class="window">
+          <div class="window-chrome">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="window-title mono">DaddyRecorder — recording</span>
+            <span class="window-timer mono" id="windowTimer">00:07</span>
+          </div>
+          <div class="window-body" id="demoBody">
+            <div class="demo-grid">
+              <div class="demo-card" data-target>
+                <span class="demo-card-kicker mono">01</span>
+                <span class="demo-card-title">Kickoff slide</span>
+              </div>
+              <div class="demo-card" data-target>
+                <span class="demo-card-kicker mono">02</span>
+                <span class="demo-card-title">Live editor walkthrough</span>
+              </div>
+              <div class="demo-card" data-target>
+                <span class="demo-card-kicker mono">03</span>
+                <span class="demo-card-title">Pricing</span>
+              </div>
+              <div class="demo-card" data-target>
+                <span class="demo-card-kicker mono">04</span>
+                <span class="demo-card-title">Q&amp;A</span>
+              </div>
+            </div>
+            <div class="demo-overlay" id="demoCursor">
+              <div class="ghost-cursor">
+                <svg width="22" height="22" viewBox="0 0 20 20" fill="#0a0a0b">
+                  <path d="M1 1 L1 15 L5 11 L8 17 L10 16 L7 10 L13 10 Z" fill="#fff" stroke="#0a0a0b" stroke-width="1"/>
+                </svg>
+              </div>
+              <div class="ripple" id="demoRipple"></div>
+              <div class="zoom-reticle" id="demoReticle"></div>
+              <div class="webcam-bubble" id="demoBubble"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side marks — pretend film strip -->
+    <aside class="filmstrip left" aria-hidden="true">
+      <span class="mono">00:00</span><span class="mono">00:04</span><span class="mono">00:08</span><span class="mono">00:12</span><span class="mono">00:16</span><span class="mono">00:20</span>
+    </aside>
+    <aside class="filmstrip right" aria-hidden="true">
+      <span class="mono">TAKE 01</span><span class="mono">TAKE 02</span><span class="mono">TAKE 03</span>
+    </aside>
+  </section>
+
+  <!-- ==== WHAT IT DOES — kinetic feature reel ==== -->
+  <section class="reel" id="what">
+    <header class="section-head">
+      <div class="eyebrow mono">
+        <span class="green-dot"></span>
+        01 — The takes
+      </div>
+      <h2 class="section-title">Five tools most recorders forget to ship.</h2>
+    </header>
+
+    <div class="takes">
+      <article class="take take-a">
+        <div class="take-index mono">T-01</div>
+        <h3>Auto-zoom on every click.</h3>
+        <p>Critical-damped spring math chases your cursor so zooms feel cinematic, never bouncy. Tunable if you want to nerd out.</p>
+        <div class="take-viz viz-zoom">
+          <div class="viz-frame"></div>
+          <div class="viz-cursor"></div>
+          <div class="viz-reticle"></div>
+        </div>
+      </article>
+
+      <article class="take take-b">
+        <div class="take-index mono">T-02</div>
+        <h3>Webcam bubble, composited cleanly.</h3>
+        <p>Live preview while you record. Drag it over the screen or over the backdrop. Blur or replace your background with MediaPipe — runs on-device.</p>
+        <div class="take-viz viz-bubble">
+          <div class="viz-frame"></div>
+          <div class="bubble-preview"></div>
+        </div>
+      </article>
+
+      <article class="take take-c">
+        <div class="take-index mono">T-03</div>
+        <h3>3-2-1 countdown on the real screen.</h3>
+        <p>A transparent overlay runs the countdown above your actual window, invisible to the recording thanks to macOS content protection.</p>
+        <div class="take-viz viz-countdown">
+          <div class="viz-frame"></div>
+          <div class="count" id="countdownCount">3</div>
+        </div>
+      </article>
+
+      <article class="take take-d">
+        <div class="take-index mono">T-04</div>
+        <h3>Editor that's already done.</h3>
+        <p>Split, trim, pick aspect ratio, add a background, drop a browser frame. The clip is ready the moment you stop recording.</p>
+        <div class="take-viz viz-editor">
+          <div class="viz-frame">
+            <div class="viz-timeline"></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="take take-e">
+        <div class="take-index mono">T-05</div>
+        <h3>Straight to ~/Movies/DaddyRecorder.</h3>
+        <p>No save dialogs, no filename prompts. Finder reveals the export the instant it lands. Recent clips live in your menu bar.</p>
+        <div class="take-viz viz-folder">
+          <div class="folder"></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ==== HOW IT WORKS — three steps ==== -->
+  <section class="steps" id="how">
+    <header class="section-head">
+      <div class="eyebrow mono">
+        <span class="green-dot"></span>
+        02 — How it works
+      </div>
+      <h2 class="section-title">Three keystrokes. Zero fiddling.</h2>
+    </header>
+
+    <ol class="step-list">
+      <li>
+        <div class="step-num mono">01</div>
+        <div class="step-body">
+          <h3>Hit <kbd>⌘</kbd><kbd>⇧</kbd><kbd>R</kbd>.</h3>
+          <p>From anywhere on your Mac. A 3-2-1 overlay lands on the screen you picked. MediaRecorder starts the instant it's gone.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-num mono">02</div>
+        <div class="step-body">
+          <h3>Do your thing.</h3>
+          <p>Your cursor, clicks, and webcam are being watched. Auto-zoom follows. macOS Portrait / Center Stage stack on top if you want.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-num mono">03</div>
+        <div class="step-body">
+          <h3>Hit the shortcut again.</h3>
+          <p>Editor opens with the take. Tweak if you want. Export lands in <span class="mono">~/Movies/DaddyRecorder</span>. Done.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ==== SHORTCUTS ==== -->
+  <section class="shortcuts" id="shortcuts">
+    <header class="section-head">
+      <div class="eyebrow mono">
+        <span class="green-dot"></span>
+        03 — Muscle memory
+      </div>
+      <h2 class="section-title">A shortcut for everything.</h2>
+    </header>
+
+    <div class="shortcut-grid">
+      <div class="shortcut">
+        <div class="keys"><kbd>⌘</kbd><kbd>⇧</kbd><kbd>R</kbd></div>
+        <div class="shortcut-label">Start / stop recording — from anywhere</div>
+      </div>
+      <div class="shortcut">
+        <div class="keys"><kbd>⌘</kbd><kbd>⇧</kbd><kbd>H</kbd></div>
+        <div class="shortcut-label">Toggle camera bubble mid-take</div>
+      </div>
+      <div class="shortcut">
+        <div class="keys"><kbd>Space</kbd></div>
+        <div class="shortcut-label">Play / pause the preview in the editor</div>
+      </div>
+      <div class="shortcut">
+        <div class="keys"><kbd>Z</kbd></div>
+        <div class="shortcut-label">Add a zoom segment at the playhead</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==== DOWNLOAD ==== -->
+  <section class="download" id="download">
+    <div class="download-inner">
+      <div class="eyebrow mono eyebrow-white">
+        <span class="green-dot"></span>
+        04 — Roll the tape
+      </div>
+      <h2 class="download-title">
+        Stop describing the bug.<br />
+        <em>Show it.</em>
+      </h2>
+      <p class="download-sub">Free while we launch. Native Mac app, Apple silicon, no account required.</p>
+
+      <a class="btn btn-primary btn-xxl" href="https://github.com/Xaid-vfx/daddyrecorder-site/releases/latest/download/DaddyRecorder.dmg" download>
+        <span class="btn-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l4 5h-3v8h-2V7H8l4-5zM4 19v2h16v-2H4z"/></svg>
+        </span>
+        <span>Download DaddyRecorder</span>
+        <span class="btn-sub mono">DMG · 94 MB · arm64</span>
+      </a>
+
+      <p class="download-note">
+        First launch: right-click → Open to get past macOS's "unidentified developer" warning.
+        We'll sign the next release.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==== FOOTER ==== -->
+  <footer class="foot">
+    <div class="foot-left mono">
+      <span class="rec-dot" aria-hidden="true"></span> DaddyRecorder · v1.0.0
+    </div>
+    <div class="foot-right mono">
+      © <span id="year">2026</span> · Built on a MacBook that was also being recorded.
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
