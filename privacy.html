@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — DaddyRecorder</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .privacy-page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 120px 24px 80px;
+    }
+    .privacy-page h1 {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .privacy-page .last-updated {
+      color: var(--text-faint);
+      font-size: 14px;
+      margin-bottom: 48px;
+    }
+    .privacy-page h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-top: 48px;
+      margin-bottom: 16px;
+      color: var(--green);
+    }
+    .privacy-page p, .privacy-page li {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+    .privacy-page ul {
+      padding-left: 24px;
+      margin-bottom: 24px;
+    }
+    .privacy-page li {
+      margin-bottom: 8px;
+    }
+    .privacy-page strong {
+      color: var(--text);
+    }
+    .privacy-page a {
+      color: var(--green);
+      text-decoration: underline;
+    }
+    .privacy-page a:hover {
+      opacity: 0.8;
+    }
+    .privacy-footer {
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .privacy-footer a {
+      color: var(--text-dim);
+      text-decoration: none;
+    }
+    .privacy-footer a:hover {
+      color: var(--green);
+    }
+  </style>
+</head>
+<body>
+  <header class="hud">
+    <div class="hud-left">
+      <a href="/" style="display: flex; align-items: center; gap: 8px;">
+        <svg width="24" height="24" viewBox="0 0 100 100" fill="none">
+          <path d="M 88 50 L 82 56 L 36 82 L 36 74 Z" fill="#0AA868"/>
+          <path d="M 30 18 L 82 50 L 30 70 Z" fill="#01FD48"/>
+        </svg>
+        <span style="font-weight: 600;">DaddyRecorder</span>
+      </a>
+    </div>
+    <div class="hud-right">
+      <a class="btn btn-ghost" href="/#download">Download</a>
+    </div>
+  </header>
+
+  <main class="privacy-page">
+    <h1>Privacy Policy</h1>
+    <p class="last-updated">Last updated: April 23, 2025</p>
+
+    <p>
+      DaddyRecorder is a screen recording extension for Chrome. We are committed to protecting your privacy.
+      This policy explains what data we collect, how we use it, and your rights.
+    </p>
+
+    <h2>Summary</h2>
+    <p>
+      <strong>We do not collect, store, or transmit any of your personal data.</strong>
+      All recordings and processing happen locally on your device. Your videos never leave your computer
+      unless you choose to share them yourself.
+    </p>
+
+    <h2>Data We Collect</h2>
+    <p>DaddyRecorder collects the following data <strong>locally on your device only</strong>:</p>
+    <ul>
+      <li><strong>Screen content:</strong> The video of your screen, window, or tab that you choose to record.</li>
+      <li><strong>Cursor position and clicks:</strong> Mouse coordinates and click events during recording, used to enable the auto-zoom feature.</li>
+      <li><strong>Webcam video:</strong> If you enable the camera, your webcam feed is recorded locally.</li>
+      <li><strong>Microphone audio:</strong> If you enable the microphone, your voice is recorded locally.</li>
+      <li><strong>User preferences:</strong> Settings like video quality, format, and recording options are stored in Chrome's local storage.</li>
+    </ul>
+    <p>
+      <strong>None of this data is transmitted to any server.</strong> Everything stays on your computer.
+    </p>
+
+    <h2>Data We Do NOT Collect</h2>
+    <ul>
+      <li>Personal information (name, email, address)</li>
+      <li>Account credentials or passwords</li>
+      <li>Browsing history or web activity</li>
+      <li>Location data</li>
+      <li>Analytics or usage statistics</li>
+      <li>Any data from pages you don't record</li>
+    </ul>
+
+    <h2>How Your Data Is Used</h2>
+    <p>The data collected during recording is used solely to:</p>
+    <ul>
+      <li>Create the screen recording video</li>
+      <li>Enable auto-zoom effects based on your cursor movement</li>
+      <li>Overlay your webcam feed on the recording (if enabled)</li>
+      <li>Include your voice in the recording (if enabled)</li>
+      <li>Remember your preferences for future recordings</li>
+    </ul>
+
+    <h2>Data Storage</h2>
+    <ul>
+      <li><strong>Recordings:</strong> Stored temporarily in your browser's memory during editing. When you export, the video is saved to your Downloads folder. We do not retain copies.</li>
+      <li><strong>Settings:</strong> Stored in Chrome's local storage on your device. You can clear this anytime through Chrome settings.</li>
+    </ul>
+
+    <h2>Data Sharing</h2>
+    <p>
+      We do not sell, rent, or share any user data with third parties. Period.
+    </p>
+    <p>
+      Your recordings are yours. They only leave your device if you manually share them (email, upload, etc.).
+    </p>
+
+    <h2>Third-Party Services</h2>
+    <p>
+      DaddyRecorder does not integrate with any third-party analytics, advertising, or tracking services.
+      We do not use cookies for tracking purposes.
+    </p>
+
+    <h2>Permissions Explained</h2>
+    <p>Here's why DaddyRecorder requests certain Chrome permissions:</p>
+    <ul>
+      <li><strong>activeTab:</strong> To capture the screen content of the tab you're recording.</li>
+      <li><strong>tabs:</strong> To identify the recorded tab and open the editor after recording.</li>
+      <li><strong>storage:</strong> To save your preferences locally.</li>
+      <li><strong>downloads:</strong> To save the exported video to your computer.</li>
+      <li><strong>scripting:</strong> To inject the cursor tracking script for auto-zoom.</li>
+      <li><strong>host_permissions:</strong> To enable cursor tracking on any page you choose to record.</li>
+    </ul>
+
+    <h2>Children's Privacy</h2>
+    <p>
+      DaddyRecorder is not directed at children under 13. We do not knowingly collect any information from children.
+    </p>
+
+    <h2>Changes to This Policy</h2>
+    <p>
+      We may update this privacy policy from time to time. Any changes will be posted on this page with an updated revision date.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      If you have questions about this privacy policy, please contact us at:
+    </p>
+    <p>
+      <a href="mailto:privacy@daddyrecorder.com">privacy@daddyrecorder.com</a>
+    </p>
+    <p>
+      Or open an issue on our <a href="https://github.com/Xaid-vfx/daddyrecorder-site" target="_blank">GitHub repository</a>.
+    </p>
+
+    <div class="privacy-footer">
+      <a href="/">← Back to DaddyRecorder</a>
+    </div>
+  </main>
+</body>
+</html>
